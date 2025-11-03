@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  instruments Instrument[]
+  templates   Template[]
+}
+
+model Instrument {
+  id                     String   @id @default(cuid())
+  name                   String
+  brand                  String
+  type                   String
+  serialNumber           String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  userId                 String
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  measurementQuantities  MeasurementQuantity[]
+}
+
+model MeasurementQuantity {
+  id             String   @id @default(cuid())
+  name           String
+
+  instrumentId   String
+  instrument     Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+
+  ranges         MeasurementRange[]
+}
+
+model MeasurementRange {
+  id                      String   @id @default(cuid())
+  minRange                String
+  maxRange                String
+  unit                    String
+  cmc                     Float
+  drift                   Float
+  calibrationUncertainty  Float
+
+  measurementQuantityId   String
+  measurementQuantity     MeasurementQuantity @relation(fields: [measurementQuantityId], references: [id], onDelete: Cascade)
+
+  templates               Template[]
+}
+
+model Template {
+  id                      String   @id @default(cuid())
+  name                    String
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  userId                  String
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  measurementRangeId      String
+  measurementRange        MeasurementRange @relation(fields: [measurementRangeId], references: [id], onDelete: Cascade)
+
+  components              TemplateComponent[]
+}
+
+model TemplateComponent {
+  id           String   @id @default(cuid())
+  name         String
+  unit         String
+  uncertainty  Float
+  distribution String   // Normal, Rectangular, Type A
+  divisor      Float
+  ni           Float    @default(1)
+  order        Int
+
+  templateId   String
+  template     Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+}
