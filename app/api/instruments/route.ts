@@ -57,7 +57,8 @@ export async function POST(request: Request) {
         userId: session.user.id,
         measurementQuantities: {
           create: measurementQuantities.map((mq: any) => ({
-            name: mq.name,
+            measuredQuantity: mq.measuredQuantity,
+            instrumentType: mq.instrumentType,
             ranges: {
               create: mq.ranges.map((range: any) => ({
                 minRange: range.minRange,

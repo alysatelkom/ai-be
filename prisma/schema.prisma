@@ -19,8 +19,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  instruments Instrument[]
-  templates   Template[]
+  instruments         Instrument[]
+  templates           Template[]
+  calculationHistory  CalculationHistory[]
 }
 
 model Instrument {
@@ -39,13 +40,14 @@ model Instrument {
 }
 
 model MeasurementQuantity {
-  id             String   @id @default(cuid())
-  name           String
+  id                String   @id @default(cuid())
+  measuredQuantity  String   // Besaran yang diukur (e.g., DC Voltage)
+  instrumentType    String   // Jenis alat yang dikalibrasi (e.g., DC Voltage Meter)
 
-  instrumentId   String
-  instrument     Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+  instrumentId      String
+  instrument        Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
 
-  ranges         MeasurementRange[]
+  ranges            MeasurementRange[]
 }
 
 model MeasurementRange {
@@ -90,4 +92,20 @@ model TemplateComponent {
 
   templateId   String
   template     Template @relation(fields: [templateId], references: [id], onDelete: Cascade)
+}
+
+model CalculationHistory {
+  id                    String   @id @default(cuid())
+  instrumentName        String
+  measuredQuantity      String
+  instrumentType        String
+  measurementRange      String
+  components            String   // JSON string of components
+  results               String   // JSON string of results (uc, veff, k, U, etc.)
+  createdAt             DateTime @default(now())
+
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }

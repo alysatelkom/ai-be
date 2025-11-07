@@ -18,7 +18,8 @@ export function InstrumentDialog({ open, instrument, onClose }: InstrumentDialog
     brand: "",
     type: "",
     serialNumber: "",
-    measurementQuantity: "",
+    measuredQuantity: "",
+    instrumentType: "",
     minRange: "",
     maxRange: "",
     unit: "",
@@ -37,7 +38,8 @@ export function InstrumentDialog({ open, instrument, onClose }: InstrumentDialog
         brand: instrument.brand || "",
         type: instrument.type || "",
         serialNumber: instrument.serialNumber || "",
-        measurementQuantity: firstMq?.name || "",
+        measuredQuantity: firstMq?.measuredQuantity || "",
+        instrumentType: firstMq?.instrumentType || "",
         minRange: firstRange?.minRange || "",
         maxRange: firstRange?.maxRange || "",
         unit: firstRange?.unit || "",
@@ -51,7 +53,8 @@ export function InstrumentDialog({ open, instrument, onClose }: InstrumentDialog
         brand: "",
         type: "",
         serialNumber: "",
-        measurementQuantity: "",
+        measuredQuantity: "",
+        instrumentType: "",
         minRange: "",
         maxRange: "",
         unit: "",
@@ -74,7 +77,8 @@ export function InstrumentDialog({ open, instrument, onClose }: InstrumentDialog
         serialNumber: formData.serialNumber,
         measurementQuantities: [
           {
-            name: formData.measurementQuantity,
+            measuredQuantity: formData.measuredQuantity,
+            instrumentType: formData.instrumentType,
             ranges: [
               {
                 minRange: formData.minRange,
@@ -157,15 +161,25 @@ export function InstrumentDialog({ open, instrument, onClose }: InstrumentDialog
           </div>
 
           <div className="border-t pt-4">
-            <h4 className="font-semibold mb-4">Besaran Ukur</h4>
+            <h4 className="font-semibold mb-4">Spesifikasi Pengukuran</h4>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="measurementQuantity">Nama Besaran</Label>
+                <Label htmlFor="measuredQuantity">Besaran yang diukur</Label>
                 <Input
-                  id="measurementQuantity"
-                  placeholder="Contoh: DC Voltmeter"
-                  value={formData.measurementQuantity}
-                  onChange={(e) => setFormData({ ...formData, measurementQuantity: e.target.value })}
+                  id="measuredQuantity"
+                  placeholder="Contoh: DC Voltage"
+                  value={formData.measuredQuantity}
+                  onChange={(e) => setFormData({ ...formData, measuredQuantity: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="instrumentType">Jenis alat yang dikalibrasi</Label>
+                <Input
+                  id="instrumentType"
+                  placeholder="Contoh: DC Voltage Meter"
+                  value={formData.instrumentType}
+                  onChange={(e) => setFormData({ ...formData, instrumentType: e.target.value })}
                   required
                 />
               </div>
