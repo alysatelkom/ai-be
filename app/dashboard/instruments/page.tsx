@@ -86,7 +86,7 @@ export default function InstrumentsPage() {
                 <TableHead>Merek</TableHead>
                 <TableHead>Tipe/Model</TableHead>
                 <TableHead>Serial Number</TableHead>
-                <TableHead>Besaran Ukur</TableHead>
+                <TableHead>Jenis alat yang dikalibrasi</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
@@ -99,7 +99,7 @@ export default function InstrumentsPage() {
                   <TableCell>{instrument.serialNumber}</TableCell>
                   <TableCell>
                     {instrument.measurementQuantities
-                      .map((mq: any) => mq.name)
+                      .map((mq: any) => mq.instrumentType)
                       .join(", ")}
                   </TableCell>
                   <TableCell className="text-right">
